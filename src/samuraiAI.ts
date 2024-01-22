@@ -102,14 +102,14 @@ function search2(game:Game,depth:number,alpha,beta){
         move.dest = newgamestate
         var score = search2(newgamestate,depth - 1,alpha,beta)
         newgamestate.score = score
-        if(maximizing){
-            alpha = Math.max(alpha,score)
-        }else{
-            beta = Math.min(beta,score)
-        }
-        if(beta <= alpha){
-            break
-        }
+        // if(maximizing){
+        //     alpha = Math.max(alpha,score)
+        // }else{
+        //     beta = Math.min(beta,score)
+        // }
+        // if(beta <= alpha){
+        //     break
+        // }
 
     }
 
