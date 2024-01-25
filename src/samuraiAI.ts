@@ -78,6 +78,11 @@ function findBestMoves(game:Game,depth:number){
 //     return game.score
 // }
 
+
+//no optimization = 2493 searched
+//ab pruning = 158 searched
+
+
 function search2(game:Game,depth:number,alpha,beta){
     var maximizing = game.teamturn == 0
     let funccallid = rng.next();
@@ -102,15 +107,15 @@ function search2(game:Game,depth:number,alpha,beta){
         move.dest = newgamestate
         var score = search2(newgamestate,depth - 1,alpha,beta)
         newgamestate.score = score
-        // if(maximizing){
-        //     alpha = Math.max(alpha,score)
-        // }else{
-        //     beta = Math.min(beta,score)
-        // }
-        // if(beta <= alpha){
-        //     break
-        // }
-
+        if(maximizing){
+            alpha = Math.max(alpha,score)
+        }else{
+            beta = Math.min(beta,score)
+        }
+        if(beta <= alpha){
+            game.legalMoves = game.legalMoves.filter(g => g.dest != null)
+            break
+        }
     }
 
     filterIllegalMoves(game)
