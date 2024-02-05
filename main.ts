@@ -33,13 +33,13 @@ var maxSpecialMoveLength = 7
 var celsize = new Vector(50,50)
 
 var imageurls = [
-    'images/blank.png',
-    'images/dragon.png',
-    'images/bird.png',
-    'images/sword.png',
-    'images/coin.png',
-    'images/special.png',
-    'images/start.png',
+    '/samurai/images/blank.png',
+    '/samurai/images/dragon.png',
+    '/samurai/images/bird.png',
+    '/samurai/images/sword.png',
+    '/samurai/images/coin.png',
+    '/samurai/images/special.png',
+    '/samurai/images/start.png',
 ]
 var images = imageurls.map((url) => {
     var img = new Image()
