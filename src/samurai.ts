@@ -10,6 +10,6 @@ class Samurai{
     }
 
     copy(){
-        return new Samurai({pos:this.pos.c(),team:this.team})
+        return new Samurai({pos:this.pos.c(),team:this.team,moved:this.moved})
     }
 }

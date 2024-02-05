@@ -1,4 +1,4 @@
-
+//samurai clipper
 
 //minimax
 //alpha beta pruning
@@ -13,128 +13,133 @@
 //game rules
 // https://boardgamegeek.com/image/433420/samurai
 
+//board
+// https://marktplaza.b-cdn.net/94304938_1.jpg
+
 //boardstates are nodes with scores
 //moves are the connections between boardstates
 
 let removedcount = 0
 let searched = 0
 let leaves = 0
+let transpositions = 0
+
+let hashtable = new Map<string,Game>()
 function findBestMoves(game:Game,depth:number){
     removedcount = 0
     searched = 0
     leaves = 0
-    search2(game,depth,-Infinity,+Infinity)
-    game.legalMoves.sort((a,b) => b.dest.score - a.dest.score)
+    transpositions = 0
+    rng = new RNG(0)
+    hashtable.clear()
+    timeFunction(() => {
+        search(game,depth,-Infinity,+Infinity)
+    })
+    // game.legalMoves.sort((a,b) => b.dest.score - a.dest.score)
     console.log('removed: ' + removedcount)
     console.log('seached: ' + searched)
     console.log('leaves: ' + leaves)
+    console.log('transpositions: ' + transpositions)
+    console.log('---------------------')
     return game.legalMoves
 }
 
-// function search(game:Game,depth:number):number{
-//     let funccallid = rng.next();
-//     searched++
-//     if(game.legalMoves.length == 0){
-//         leaves++
-//         return -Infinity
-//     }
-//     if(depth == 0){
-//         leaves++
-//         return heuristic(game)
-//     }
-
-//     let i = 0
-//     //here do the alpha beta pruning and move ordering
-//     for(var move of game.legalMoves){
-//         var newgamestate = game.copy()
-//         moveSamurai(newgamestate,move)
-//         move.dest = newgamestate
-//         var score = search(newgamestate,depth - 1)
-//         newgamestate.score = score
-
-//         //scan for the best score afterwards
-//         //first filter out moves that are infinite if not enough samurais have moved
-//         i++
-//     }
-//     var oldmoves = game.legalMoves
-//     game.legalMoves = game.legalMoves.filter(m => {
-        
-//         if(m.dest.score == -Infinity){
-//             var nonmovedsamuraicount = m.dest.samurailist.filter(sam => sam.team == m.dest.teamturn && sam.moved == false).length
-//             if(nonmovedsamuraicount >= 3){
-//                 removedcount++
-//                 return false
-//             }
-//         }
-//         return true
-//     })
-//     if(game.legalMoves.length == 0){
-//         leaves++
-//         return -Infinity
-//     }
-    
-
-//     game.score = -findBest(game.legalMoves,(m) => -m.dest.score).dest.score
-//     return game.score
-// }
-
-
-//no optimization = 2493 searched
-//ab pruning = 158 searched
-
-
-function search2(game:Game,depth:number,alpha,beta){
+function search(game:Game,depth:number,alpha,beta){
     var maximizing = game.teamturn == 0
+    
+    var worstresult = maximizing ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER
     let funccallid = rng.next();
+    game.funccallid = funccallid
     searched++
+
     if(game.legalMoves.length == 0){
         leaves++
-        return -Infinity
+        return worstresult
     }
     if(depth == 0){
         leaves++
         return heuristic(game)
     }
 
+
     // for(var move of game.legalMoves){
+    //     let newgamestate = game.copy()
+    //     moveSamurai(newgamestate,move)
+    //     move.dest = newgamestate
+        
     //     move.dest.heuristic = heuristic(move.dest)
     // }
-    // game.legalMoves.sort((a,b) => b.dest.heuristic - a.dest.heuristic)
+    // if(maximizing){
+    //     game.legalMoves.sort((a,b) => b.dest.heuristic - a.dest.heuristic)
+    // }else{
+    //     game.legalMoves.sort((a,b) => a.dest.heuristic - b.dest.heuristic)
+    // }
+
 
     for(var move of game.legalMoves){
-        var newgamestate = game.copy()
+        //----
+        let newgamestate = game.copy()
         moveSamurai(newgamestate,move)
         move.dest = newgamestate
-        var score = search2(newgamestate,depth - 1,alpha,beta)
-        newgamestate.score = score
+        //----
+        
+        var specialdepthaddition = 0
+        var oldspecialusedCount = game.specialUsed.filter(s => s).length
+        var newSpecialUsedcount = newgamestate.specialUsed.filter(s => s).length
+        if(newSpecialUsedcount > oldspecialusedCount){
+            specialdepthaddition = 1
+        }
+
+        move.dest.hashval = move.dest.hash()
+        let score = 0
+        if(hashtable.has(move.dest.hashval) && false){
+            transpositions++
+            score = hashtable.get(move.dest.hashval).score
+        }else{
+            score = search(move.dest,depth - 1 + specialdepthaddition,alpha,beta)
+        }
+
+        move.dest.score = score
+        hashtable.set(move.dest.hashval,move.dest)
+
+        //alpha beta pruning
         if(maximizing){
             alpha = Math.max(alpha,score)
         }else{
             beta = Math.min(beta,score)
         }
         if(beta <= alpha){
-            game.legalMoves = game.legalMoves.filter(g => g.dest != null)
+            game.legalMoves = game.legalMoves.filter(g => g?.dest?.score != null)
             break
         }
+        //--------------------------------
     }
 
     filterIllegalMoves(game)
     if(game.legalMoves.length == 0){
         leaves++
-        return -Infinity
+        return worstresult
     }
-    game.legalMoves.sort((a,b) => b.dest.score - a.dest.score)
     if(maximizing){
-        game.score = game.legalMoves[0].dest.score
+        game.legalMoves.sort((a,b) => b.dest.score - a.dest.score)
     }else{
-        game.score = game.legalMoves[game.legalMoves.length - 1].dest.score
+        game.legalMoves.sort((a,b) => a.dest.score - b.dest.score)
     }
+    game.score = game.legalMoves[0].dest.score
     
+    if(game.score > 99999){
+        game.score -= 1
+    }else if(game.score < -99999){
+        game.score += 1
+    }
+
     return game.score
 
     function filterIllegalMoves(game:Game){
-        game.legalMoves = game.legalMoves.filter(m => {
-            if(m.dest.score == -Infinity){
+        var game2 = game
+        var filteredmoves = game.legalMoves.filter(m => {
+            var game3 = game2
+            if(m.dest.score > 99999 || m.dest.score < -99999){
                 var nonmovedsamuraicount = m.dest.samurailist.filter(sam => sam.team == m.dest.teamturn && sam.moved == false).length
                 if(nonmovedsamuraicount >= 3){
                     removedcount++
@@ -143,6 +148,10 @@ function search2(game:Game,depth:number,alpha,beta){
             }
             return true
         })
+        if(filteredmoves.length != game.legalMoves.length){
+            console.log('illegal moves removed')
+        }
+        game.legalMoves = filteredmoves
     }
 }
 
@@ -182,6 +191,13 @@ function countScore(moves:Move[]){
 
 function findBest(array:any[],cb){
     return array[findbestIndex(array,cb)]
+}
+
+function timeFunction(func:Function){
+    var start = performance.now()
+    func()
+    var end = performance.now()
+    console.log('time: ' + (end - start).toFixed(0) + 'ms')
 }
 
 //heuristic

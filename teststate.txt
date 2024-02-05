@@ -1,0 +1,14 @@
+
+// 2 moved samurai on both teames, green to move
+{"teamturn":0,"lastmovelength":7,"activeIcon":0,"samurailist":[{"pos":{"x":3,"y":0},"team":0,"moved":false},{"pos":{"x":8,"y":4},"team":0,"moved":true},{"pos":{"x":6,"y":0},"team":0,"moved":false},{"pos":{"x":1,"y":6},"team":0,"moved":true},{"pos":{"x":3,"y":10},"team":1,"moved":false},{"pos":{"x":4,"y":10},"team":1,"moved":false},{"pos":{"x":6,"y":5},"team":1,"moved":true},{"pos":{"x":7,"y":3},"team":1,"moved":true}]}
+
+
+// green can move on purple
+{"teamturn":0,"lastmovelength":3,"activeIcon":0,"samurailist":[{"pos":{"x":3,"y":0},"team":0,"moved":false},{"pos":{"x":5,"y":1},"team":0,"moved":true},{"pos":{"x":6,"y":0},"team":0,"moved":false},{"pos":{"x":7,"y":3},"team":0,"moved":true},{"pos":{"x":3,"y":7},"team":1,"moved":true},{"pos":{"x":4,"y":10},"team":1,"moved":false},{"pos":{"x":6,"y":10},"team":1,"moved":false},{"pos":{"x":9,"y":8},"team":1,"moved":true}]}
+
+
+// 1 samurai
+{"teamturn":0,"lastmovelength":3,"activeIcon":0,"samurailist":[{"pos":{"x":7,"y":3},"team":0,"moved":true}]}
+
+//too many illegal moves are removed
+{"teamturn":0,"lastmovelength":2,"activeIcon":1,"samurailist":[{"pos":{"x":4,"y":4},"team":0,"moved":true},{"pos":{"x":6,"y":0},"team":0,"moved":true},{"pos":{"x":10,"y":3},"team":0,"moved":true},{"pos":{"x":7,"y":0},"team":0,"moved":true},{"pos":{"x":3,"y":10},"team":1,"moved":false},{"pos":{"x":5,"y":6},"team":1,"moved":true},{"pos":{"x":8,"y":10},"team":1,"moved":true},{"pos":{"x":7,"y":2},"team":1,"moved":true}]}

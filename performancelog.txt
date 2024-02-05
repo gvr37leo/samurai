@@ -1,0 +1,14 @@
+
+//no optimazation
+time: 942ms
+samuraiAI.ts:36 removed: 0
+samuraiAI.ts:37 seached: 61001
+samuraiAI.ts:38 leaves: 59204
+samuraiAI.ts:39 transpositions: 0
+
+//alpha beta, no ordering
+time: 65ms
+samuraiAI.ts:36 removed: 0
+samuraiAI.ts:37 seached: 4079
+samuraiAI.ts:38 leaves: 3816
+samuraiAI.ts:39 transpositions: 0

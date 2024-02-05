@@ -170,16 +170,16 @@ function last<T>(arr:T[]):T{
     return arr[arr.length - 1]
 }
 
-function create2DArray<T>(size:Vector,filler:(pos:Vector) => T){
-    var result = new Array(size.y)
-    for(var i = 0; i < size.y;i++){
-        result[i] = new Array(size.x)
-    }
-    size.loop2d(v => {
-        result[v.y][v.x] = filler(v)
-    })
-    return result
-}
+// function create2DArray<T>(size:Vector,filler:(pos:Vector) => T){
+//     var result = new Array(size.y)
+//     for(var i = 0; i < size.y;i++){
+//         result[i] = new Array(size.x)
+//     }
+//     size.loop2d(v => {
+//         result[v.y][v.x] = filler(v)
+//     })
+//     return result
+// }
 
 function get2DArraySize(arr:any[][]){
     return new Vector(arr[0].length,arr.length)
@@ -189,9 +189,9 @@ function index2D<T>(arr:T[][],i:Vector){
     return arr[i.x][i.y]
 }
 
-function copy2dArray<T>(arr:T[][]){
-    return create2DArray(get2DArraySize(arr),pos => index2D(arr,pos))
-}
+// function copy2dArray<T>(arr:T[][]){
+//     return create2DArray(get2DArraySize(arr),pos => index2D(arr,pos))
+// }
 
 function round(number,decimals){
     var mul = 10 ** decimals
