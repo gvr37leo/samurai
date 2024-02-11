@@ -12,3 +12,10 @@
 
 //too many illegal moves are removed
 {"teamturn":0,"lastmovelength":2,"activeIcon":1,"samurailist":[{"pos":{"x":4,"y":4},"team":0,"moved":true},{"pos":{"x":6,"y":0},"team":0,"moved":true},{"pos":{"x":10,"y":3},"team":0,"moved":true},{"pos":{"x":7,"y":0},"team":0,"moved":true},{"pos":{"x":3,"y":10},"team":1,"moved":false},{"pos":{"x":5,"y":6},"team":1,"moved":true},{"pos":{"x":8,"y":10},"team":1,"moved":true},{"pos":{"x":7,"y":2},"team":1,"moved":true}]}
+
+//special available
+{"teamturn":1,"lastmovelength":3,"activeIcon":0,"samurailist":[{"pos":{"x":3,"y":4},"team":0,"moved":true},{"pos":{"x":4,"y":4},"team":0,"moved":true},{"pos":{"x":6,"y":4},"team":0,"moved":true},{"pos":{"x":4,"y":0},"team":0,"moved":true},{"pos":{"x":3,"y":5},"team":1,"moved":true},{"pos":{"x":8,"y":6},"team":1,"moved":true},{"pos":{"x":6,"y":5},"team":1,"moved":true},{"pos":{"x":7,"y":10},"team":1,"moved":false}]}
+funccalid 1408369351 for some reason not all moves are available, maybe pruned?
+
+//too much pruning?
+{"teamturn":1,"lastmovelength":3,"activeIcon":0,"samurailist":[{"pos":{"x":3,"y":4},"team":0,"moved":true},{"pos":{"x":4,"y":4},"team":0,"moved":true},{"pos":{"x":6,"y":4},"team":0,"moved":true},{"pos":{"x":4,"y":0},"team":0,"moved":true},{"pos":{"x":3,"y":5},"team":1,"moved":true},{"pos":{"x":8,"y":6},"team":1,"moved":true},{"pos":{"x":6,"y":5},"team":1,"moved":true},{"pos":{"x":7,"y":10},"team":1,"moved":false}]}

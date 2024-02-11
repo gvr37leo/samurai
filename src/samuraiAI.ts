@@ -149,7 +149,7 @@ function search(game:Game,depth:number,alpha,beta){
             return true
         })
         if(filteredmoves.length != game.legalMoves.length){
-            console.log('illegal moves removed')
+            // console.log('illegal moves removed')
         }
         game.legalMoves = filteredmoves
     }

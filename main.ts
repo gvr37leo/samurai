@@ -32,15 +32,22 @@ var ctxt = crret.ctxt
 var maxSpecialMoveLength = 7
 var celsize = new Vector(50,50)
 
+console.log(window.location.href)
+
 var imageurls = [
-    '/samurai/images/blank.png',
-    '/samurai/images/dragon.png',
-    '/samurai/images/bird.png',
-    '/samurai/images/sword.png',
-    '/samurai/images/coin.png',
-    '/samurai/images/special.png',
-    '/samurai/images/start.png',
+    '/images/blank.png',
+    '/images/dragon.png',
+    '/images/bird.png',
+    '/images/sword.png',
+    '/images/coin.png',
+    '/images/special.png',
+    '/images/start.png',
 ]
+
+if(window.location.href.includes('github')){
+    imageurls = imageurls.map((url) => '/samurai' + url)
+}
+
 var images = imageurls.map((url) => {
     var img = new Image()
     img.src = url
@@ -61,6 +68,8 @@ var rng = new RNG(0)
 
 enum Cel{empty,dragon,eagle,sword,coin,special}
 var celcolors = ["white","red","blue","brown","yellow","purple"]
+var iconNames = ["empty","dragon","eagle","sword","coin","special"]
+
 var board = [
     [0,4,3,0,0,4,0,0,1,2,0],
     [1,0,0,4,2,0,1,3,0,0,4],
@@ -91,6 +100,7 @@ interface HTMLElement {
     on(event,cb): HTMLElement;
 }
 
+var gameHistory:Game[] = []
 
 var displaygame = new Game()
 displaygame.teamturn = 0
@@ -103,7 +113,7 @@ startContext(document.querySelector('#buttons'))
         console.log(heuristic(displaygame))
     })
     crend('button','search').on('click',() => {
-        suggestedmove = findBestMoves(displaygame,searchdepth)[0]
+        suggestedmove = findBestMoves(displaygame,depthinput['valueAsNumber'])[0]
         rendergametreeRoot(displaygame) 
     })
 
@@ -118,6 +128,17 @@ startContext(document.querySelector('#buttons'))
         displaygame = Game.load(hashinput['value'])
         displaygame.legalMoves = generateLegalMoves(displaygame)
         rendergametreeRoot(displaygame)
+    })
+
+    crend('br')
+
+    cr('div')
+        text('search depth')
+        let depthinput = crend('input','',{value:3,type:'number'})
+    end()
+
+    crend('button','undo',{}).on('click',() => {
+        displaygame = gameHistory[gameHistory.findIndex(g => g == displaygame) - 1] 
     })
 
 
@@ -145,7 +166,8 @@ document.addEventListener('mousedown',(e) => {
         console.log(displaygame.stringify())
         if(displaygame.legalMoves.length == 0){
             console.log('game over')
-            console.log('team ' + displaygame.teamturn + ' lost')
+            // console.log('team ' + displaygame.teamturn + ' lost')
+            console.log('team ' + (displaygame.teamturn + 1) % 2 + ' won')
         }
 
         // findBestMoves(displaygame,searchdepth)
@@ -218,8 +240,8 @@ loop((dt) => {
     ctxt.textAlign = "left"
     ctxt.font = "12px Arial"
     ctxt.fillStyle = "white"
-    ctxt.fillText('teamturn: ' + displaygame.teamturn.toString(),570,10)
-    ctxt.fillText('active icon: ' + displaygame.activeIcon.toString(),570,20)
+    ctxt.fillText('teamturn: ' + ['green','orange'][displaygame.teamturn],570,10)
+    ctxt.fillText('active icon: ' + iconNames[displaygame.activeIcon],570,20)
     ctxt.fillText('movelength: ' + displaygame.lastmovelength.toString(),570,30)
 
 })
@@ -230,7 +252,7 @@ function drawRectCentered(x:number,y:number,w:number,h:number){
 
 function moveSamurai(game:Game,move:Move){
     let sam = game.samurailist.find((s) => s.pos.equals(move.from))
-
+    gameHistory.push(game.copy())
     //todo check if valid movement
     //check if first touchedicon is activeicon
     
@@ -318,7 +340,8 @@ function rendergametree2(game:Game){
     let children = game.legalMoves.filter(m => m.dest != null)
 
     if(children.length == 0){
-        game.element = crend('div',gameText(game),{style:'cursor:pointer; padding-left:10px'}).on('click',() => {
+        // game.element = crend('div',gameText(game)  + ':' + game.funccallid,{style:'cursor:pointer; padding-left:25px'}).on('click',() => {
+        game.element = crend('div',gameText(game),{style:'cursor:pointer; padding-left:25px'}).on('click',() => {
             displaygame = game
         })
     }else{
@@ -334,6 +357,7 @@ function rendergametree2(game:Game){
             })
             caret.innerHTML = '&#9658;'
 
+            // crend('span',gameText(game) + ':' + game.funccallid,{style:'cursor:pointer;'}).on('click',() => {
             crend('span',gameText(game),{style:'cursor:pointer;'}).on('click',() => {
                 displaygame = game
             })
