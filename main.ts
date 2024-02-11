@@ -20,7 +20,7 @@
 /// <reference path="src/utils.ts" />
 
 
-
+// https://gvr37leo.github.io/samurai/
 
 
 
@@ -122,20 +122,18 @@ startContext(document.querySelector('#buttons'))
         rendergametreeRoot(displaygame) 
     })
     crend('br')
-
+    cr('div')
+        text('search depth')
+        let depthinput = crend('input','',{value:3,type:'number'})
+    end()
+    crend('br')
+    
     var hashinput = crend('input','')
     crend('button','load json',{}).on('click',() => {
         displaygame = Game.load(hashinput['value'])
         displaygame.legalMoves = generateLegalMoves(displaygame)
         rendergametreeRoot(displaygame)
     })
-
-    crend('br')
-
-    cr('div')
-        text('search depth')
-        let depthinput = crend('input','',{value:3,type:'number'})
-    end()
 
     crend('button','undo',{}).on('click',() => {
         displaygame = gameHistory[gameHistory.findIndex(g => g == displaygame) - 1] 
